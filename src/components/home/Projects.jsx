@@ -33,6 +33,7 @@ function ProjectCardItem({ project, index }) {
               imageRendering: 'auto',
             }}
             loading="lazy"
+            decoding="async"
             width="480"
             height="360"
           />

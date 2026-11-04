@@ -1,6 +1,6 @@
 // Données officielles de la page À Propos
-import heroAproposImg from '../assets/images/hero-apropos.png'
-import engagementImg from '../assets/images/engagemant-photo.png'
+import heroAproposImg from '../assets/images/hero-apropos.webp'
+import engagementImg from '../assets/images/engagemant-photo.webp'
 
 export const aboutData = {
   hero: {

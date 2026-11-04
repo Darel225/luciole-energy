@@ -2,9 +2,9 @@ import { useRef, useEffect, useState } from 'react'
 import { useDevisModal } from '../../context/DevisModalContext'
 import { MapPin, ArrowRight } from 'lucide-react'
 import { useReveal } from '../../hooks/useReveal'
-import real1Img from '../../assets/images/realisation1.png'
-import real2Img from '../../assets/images/realisation2.png'
-import real3Img from '../../assets/images/realisation3.png'
+import real1Img from '../../assets/images/realisation1.webp'
+import real2Img from '../../assets/images/realisation2.webp'
+import real3Img from '../../assets/images/realisation3.webp'
 
 function BentoCardItem({
   id,
@@ -54,7 +54,7 @@ function BentoCardItem({
         <img
           src={image}
           alt={alt}
-          className="bento-card-img w-full h-full object-cover select-none will-change-transform"
+          loading="lazy" decoding="async" className="bento-card-img w-full h-full object-cover select-none will-change-transform"
           style={{ objectPosition: imagePosition }}
           loading={delay === 0 ? 'eager' : 'lazy'}
           decoding="async"

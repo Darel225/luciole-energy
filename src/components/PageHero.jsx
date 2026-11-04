@@ -175,7 +175,9 @@ export default function PageHero({
               isAnimated ? 'page-hero-bg-img h-[108%] -mt-[4%]' : 'h-full'
             } object-cover`}
             style={{ objectPosition: imagePosition }}
+            loading="eager"
             fetchPriority="high"
+            decoding="async"
             width="1376"
             height="768"
           />

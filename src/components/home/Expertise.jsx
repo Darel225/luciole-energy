@@ -55,6 +55,7 @@ function ExpertiseCardItem({ card, heightClasses, globalIndex }) {
             alt={card.title}
             className="card-scale-img-entry expertise-img absolute inset-0 w-full h-full object-cover"
             loading="lazy"
+            decoding="async"
             width="600"
             height="400"
           />

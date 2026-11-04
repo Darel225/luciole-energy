@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PageHero from '../components/PageHero'
-import contactHeroImg from '../assets/images/contact-hero.png'
+import contactHeroImg from '../assets/images/contact-hero.webp'
 import {
   ShieldCheck,
   Lock,

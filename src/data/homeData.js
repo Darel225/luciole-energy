@@ -1,13 +1,13 @@
 // Importations propres des assets
 import logoLuciole from '../assets/images/logo-luciole.jpg'
-import heroImg from '../assets/images/hero-acceuil.png'
-import identiteImg from '../assets/images/identité-img.png'
-import expertise1Img from '../assets/images/domaine-expertise1.png'
-import expertise2Img from '../assets/images/domaine-expertise2.png'
-import expertise3Img from '../assets/images/domaine-expertise3.png'
-import expertise4Img from '../assets/images/domaine-expertise4.png'
-import expertise5Img from '../assets/images/domaine-expertise5.png'
-import ctaDevisImg from '../assets/images/image-devis.png'
+import heroImg from '../assets/images/hero-acceuil.webp'
+import identiteImg from '../assets/images/identité-img.webp'
+import expertise1Img from '../assets/images/domaine-expertise1.webp'
+import expertise2Img from '../assets/images/domaine-expertise2.webp'
+import expertise3Img from '../assets/images/domaine-expertise3.webp'
+import expertise4Img from '../assets/images/domaine-expertise4.webp'
+import expertise5Img from '../assets/images/domaine-expertise5.webp'
+import ctaDevisImg from '../assets/images/image-devis.webp'
 
 export { projects as projectsData } from './projects'
 

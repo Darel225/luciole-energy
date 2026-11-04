@@ -3,7 +3,7 @@ import PageHero from '../components/PageHero'
 import RealisationsGrid from '../components/realisations/RealisationsGrid'
 import Partners from '../components/home/Partners'
 import CtaBanner from '../components/CtaBanner'
-import heroRealImage from '../assets/images/hero-realisation.png'
+import heroRealImage from '../assets/images/hero-realisation.webp'
 
 export default function Realisations() {
   useEffect(() => {

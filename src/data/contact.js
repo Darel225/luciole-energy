@@ -1,5 +1,5 @@
 // Données centralisées pour la page Contact et les coordonnées de l'entreprise
-import contactHeroImg from '../assets/images/contact-hero.png'
+import contactHeroImg from '../assets/images/contact-hero.webp'
 
 export const companyContact = {
   name: 'Luciole Energy',

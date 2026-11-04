@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PageHero from '../components/PageHero'
-import heroAproposImg from '../assets/images/hero-apropos.png'
+import heroAproposImg from '../assets/images/hero-apropos.webp'
 import {
   Building2,
   FileText,

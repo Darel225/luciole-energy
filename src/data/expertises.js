@@ -1,9 +1,9 @@
-import heroImage from '../assets/images/hero-expertise.png'
-import pole1Image from '../assets/images/expertise1.png'
-import pole2Image from '../assets/images/expertise2.png'
-import pole3Image from '../assets/images/expertise3.png'
-import pole4Image from '../assets/images/expertise4.png'
-import pole5Image from '../assets/images/expertise5.png'
+import heroImage from '../assets/images/hero-expertise.webp'
+import pole1Image from '../assets/images/expertise1.webp'
+import pole2Image from '../assets/images/expertise2.webp'
+import pole3Image from '../assets/images/expertise3.webp'
+import pole4Image from '../assets/images/expertise4.webp'
+import pole5Image from '../assets/images/expertise5.webp'
 
 export const expertisesPageData = {
   hero: {

@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Check, ArrowRight, Shield } from 'lucide-react'
-import identiteImg from '../../assets/images/identité-img.png'
+import identiteImg from '../../assets/images/identité-img.webp'
 import { useReveal } from '../../hooks/useReveal'
 import { useParallax } from '../../hooks/useParallax'
 

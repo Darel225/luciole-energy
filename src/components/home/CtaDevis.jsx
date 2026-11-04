@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useDevisModal } from '../../context/DevisModalContext'
 import { ArrowRight, Clock, CheckCircle2, Award } from 'lucide-react'
-import ctaDevisImg from '../../assets/images/image-devis.png'
+import ctaDevisImg from '../../assets/images/image-devis.webp'
 import { useReveal } from '../../hooks/useReveal'
 import { useParallax } from '../../hooks/useParallax'
 
@@ -112,6 +112,7 @@ export default function CtaDevis() {
                       objectPosition: 'center 30%',
                     }}
                     loading="lazy"
+            decoding="async"
                     width="896"
                     height="1200"
                   />

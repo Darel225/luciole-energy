@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useDevisModal } from '../../context/DevisModalContext'
 import { ArrowRight } from 'lucide-react'
-import heroImg from '../../assets/images/hero-acceuil.png'
+import heroImg from '../../assets/images/hero-acceuil.webp'
 
 export default function Hero() {
   const { openDevisModal } = useDevisModal()
@@ -93,7 +93,9 @@ export default function Hero() {
             className="hero-bg-img w-full h-[108%] object-cover object-right md:object-center -mt-[4%]"
             width="1920"
             height="1080"
+            loading="eager"
             fetchPriority="high"
+            decoding="async"
           />
         </div>
 

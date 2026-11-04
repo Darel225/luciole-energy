@@ -115,7 +115,7 @@ export default function WhoWeAre() {
               <div className="w-full h-full overflow-hidden">
                 <img
                   src={techElectriqueImg}
-                  alt="Deux techniciens Luciole Energy intervenant sur une armoire électrique"
+                  loading="lazy" decoding="async" alt="Deux techniciens Luciole Energy intervenant sur une armoire électrique"
                   className="media-scale-img w-full h-[106%] object-cover rounded-none -mt-[3%]"
                   style={{
                     objectPosition: 'center 40%',
