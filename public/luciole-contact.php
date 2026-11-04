@@ -1,5 +1,12 @@
 <?php
 // =========================================================================
+// CONFIGURATION OFFICIELLE - DESTINATAIRE DES DEMANDES (LIVRAISON CLIENT)
+// =========================================================================
+// Modifiez simplement cette adresse e-mail le jour de la livraison pour que
+// le client reçoive directement toutes les demandes de devis et de contact.
+$emailDestinataireClient = "darelseke608@gmail.com"; // Remplacer par l'email du client (ex: info@luciole-energy.com)
+
+// =========================================================================
 // TRAITEMENT DU FORMULAIRE DE CONTACT & DEVIS B2B - LUCIOLE ENERGY
 // Passerelle sécurisée avec Gabarit HTML Corporate Haute Définition
 // =========================================================================
@@ -273,7 +280,7 @@ if (file_exists($vendorAutoload)) {
             $mail->CharSet    = 'UTF-8';
 
             $mail->setFrom('darelseke608@gmail.com', 'Luciole Energy • Devis');
-            $mail->addAddress('darelseke608@gmail.com');
+            $mail->addAddress($emailDestinataireClient);
             $mail->addReplyTo($email, $nom);
 
             $mail->isHTML(true);
@@ -305,7 +312,7 @@ if (file_exists($vendorAutoload)) {
 
 // Repli mail() avec en-têtes HTML si PHPMailer indisponible
 if (!$sent) {
-    $destinataire = "darelseke608@gmail.com";
+    $destinataire = $emailDestinataireClient;
     $headers  = "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
     $headers .= "From: Luciole Energy <contact@flstructures.alwaysdata.net>\r\n";
