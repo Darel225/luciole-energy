@@ -1,0 +1,2284 @@
+/* ==========================================================================
+   LUCIOLE ENERGY - SYSTÈME DE MOUVEMENT HAUT DE GAMME
+   Mouvement corporate sobre, fluide, précis, sans fioritures (CLS = 0)
+   ========================================================================== */
+
+:root {
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.18, 1);
+  --dur-fast: 300ms;
+  --dur-base: 700ms;
+  --dur-slow: 1100ms;
+  --stagger: 90ms;
+  --reveal-distance: 18px;
+}
+
+/* ==========================================================================
+   0. ÉTAT PAR DÉFAUT (Sans JavaScript actif -> 100% visible & accessible)
+   ========================================================================== */
+.reveal,
+.reveal--fade,
+.reveal--clip-up,
+.reveal--clip-left,
+.reveal--scale-img,
+.reveal--line,
+.reveal--line-center,
+.reveal--line-y,
+.check-pop,
+.hero-anim-item,
+.card-reveal-wrap,
+.card-content-fade,
+.card-scale-img-entry {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  clip-path: none;
+}
+
+/* ==========================================================================
+   1. UTILITAIRES DE STAGGER
+   ========================================================================== */
+.stagger-1 {
+  --delay: calc(1 * var(--stagger));
+}
+
+.stagger-2 {
+  --delay: calc(2 * var(--stagger));
+}
+
+.stagger-3 {
+  --delay: calc(3 * var(--stagger));
+}
+
+.stagger-4 {
+  --delay: calc(4 * var(--stagger));
+}
+
+.stagger-5 {
+  --delay: calc(5 * var(--stagger));
+}
+
+.stagger-6 {
+  --delay: calc(6 * var(--stagger));
+}
+
+/* ==========================================================================
+   2. ÉTATS INITIAUX SOUS .js-anim UNIQUEMENT
+   ========================================================================== */
+.js-anim .reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+  transition: opacity var(--dur-base) var(--ease-out) var(--delay, 0ms),
+    transform var(--dur-base) var(--ease-out) var(--delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.js-anim .reveal--fade {
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out) var(--delay, 0ms);
+  will-change: opacity;
+}
+
+/* Révélation clip-up (toujours sur un élément enfant, jamais sur la section observée) */
+.js-anim .reveal--clip-up {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path var(--dur-slow) var(--ease-in-out) var(--delay, 0ms);
+  will-change: clip-path;
+}
+
+.js-anim .reveal--clip-left {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--dur-slow) var(--ease-in-out) var(--delay, 0ms);
+  will-change: clip-path;
+}
+
+.js-anim .reveal--scale-img {
+  overflow: hidden;
+}
+
+.js-anim .reveal--scale-img img {
+  transform: scale(1.12);
+  transition: transform 1400ms var(--ease-out) var(--delay, 0ms);
+  will-change: transform;
+}
+
+.js-anim .reveal--line {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 900ms var(--ease-out) var(--delay, 0ms);
+  will-change: transform;
+}
+
+.js-anim .reveal--line-center {
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 900ms var(--ease-out) var(--delay, 0ms);
+  will-change: transform;
+}
+
+.js-anim .reveal--line-y {
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 700ms var(--ease-out) var(--delay, 0ms);
+  will-change: transform;
+}
+
+.js-anim .check-pop {
+  transform: scale(0.6);
+  opacity: 0;
+  transition: transform 400ms var(--ease-out) var(--delay, 0ms),
+    opacity 300ms var(--ease-out) var(--delay, 0ms);
+  will-change: transform, opacity;
+}
+
+/* ==========================================================================
+   3. CASCADE DES CARTES (Wrapper indépendant du hover pour fluidité 60 fps)
+   ========================================================================== */
+.js-anim .card-reveal-wrap {
+  opacity: 0;
+  transform: translateY(32px) scale(0.98);
+  transition: opacity 900ms var(--ease-out) var(--delay, 0ms),
+    transform 900ms var(--ease-out) var(--delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.js-anim .card-reveal-wrap.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Dès que le reveal est terminé, libérer les transforms pour éviter tout conflit avec le hover */
+.js-anim .card-reveal-wrap.is-done {
+  transform: none !important;
+  transition: none !important;
+  will-change: auto !important;
+}
+
+/* Entrée de l'image interne des cartes (scale 1.1 -> 1 en 1300ms) */
+.js-anim .card-reveal-wrap .card-scale-img-entry {
+  transform: translateZ(0) scale(1.1);
+  transition: transform 1300ms var(--ease-out) var(--delay, 0ms);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.js-anim .card-reveal-wrap.is-visible .card-scale-img-entry {
+  transform: translateZ(0) scale(1);
+}
+
+.js-anim .card-reveal-wrap.is-done .card-scale-img-entry {
+  will-change: auto;
+}
+
+/* Contenu textuel interne : fade-in 500ms avec 250ms de retard */
+.js-anim .card-reveal-wrap .card-content-fade {
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out) calc(var(--delay, 0ms) + 250ms);
+}
+
+.js-anim .card-reveal-wrap.is-visible .card-content-fade {
+  opacity: 1;
+}
+
+.js-anim .card-reveal-wrap.is-done .card-content-fade {
+  opacity: 1;
+  transition: none !important;
+}
+
+/* ==========================================================================
+   4. ÉTAT VISIBLE GÉNÉRAL (.is-visible)
+   ========================================================================== */
+.js-anim .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  will-change: auto;
+}
+
+.js-anim .reveal--fade.is-visible {
+  opacity: 1;
+  will-change: auto;
+}
+
+.js-anim .reveal--clip-up.is-visible {
+  clip-path: inset(0);
+  will-change: auto;
+}
+
+.js-anim .reveal--clip-left.is-visible {
+  clip-path: inset(0);
+  will-change: auto;
+}
+
+.js-anim .reveal--scale-img.is-visible img {
+  transform: scale(1);
+  will-change: auto;
+}
+
+.js-anim .reveal--line.is-visible,
+.js-anim .reveal--line-center.is-visible {
+  transform: scaleX(1);
+  will-change: auto;
+}
+
+.js-anim .reveal--line-y.is-visible {
+  transform: scaleY(1);
+  will-change: auto;
+}
+
+.js-anim .check-pop.is-visible {
+  transform: scale(1);
+  opacity: 1;
+  will-change: auto;
+}
+
+/* ==========================================================================
+   5. HERO CHORÉGRAPHIE AU CHARGEMENT (.hero-ready)
+   ========================================================================== */
+.js-anim .hero-bg-img {
+  transform: scale(1.08);
+  transition: transform 1800ms var(--ease-out);
+  will-change: transform;
+}
+
+.js-anim.hero-ready .hero-bg-img {
+  transform: scale(1);
+  will-change: auto;
+}
+
+.js-anim .hero-badge-anim {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 600ms var(--ease-out) 250ms,
+    transform 600ms var(--ease-out) 250ms;
+}
+
+.js-anim.hero-ready .hero-badge-anim {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-anim .hero-h1-anim {
+  opacity: 0;
+  transform: translateY(24px);
+  filter: blur(8px);
+  transition: opacity 900ms var(--ease-out) 380ms,
+    transform 900ms var(--ease-out) 380ms,
+    filter 900ms var(--ease-out) 380ms;
+  will-change: opacity, transform, filter;
+}
+
+.js-anim.hero-ready .hero-h1-anim {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  will-change: auto;
+}
+
+.js-anim .hero-highlight-word {
+  color: #FFFFFF;
+  transition: color 700ms var(--ease-out) 830ms;
+}
+
+.js-anim.hero-ready .hero-highlight-word {
+  color: #34D399;
+}
+
+.js-anim .hero-p-anim {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 700ms var(--ease-out) 650ms,
+    transform 700ms var(--ease-out) 650ms;
+}
+
+.js-anim.hero-ready .hero-p-anim {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-anim .hero-btn-1 {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 600ms var(--ease-out) 800ms,
+    transform 600ms var(--ease-out) 800ms;
+}
+
+.js-anim.hero-ready .hero-btn-1 {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-anim .hero-btn-2 {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 600ms var(--ease-out) 900ms,
+    transform 600ms var(--ease-out) 900ms;
+}
+
+.js-anim.hero-ready .hero-btn-2 {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   6. CTA FINAL - IMPULSION DISCRÈTE (HALO VERT UNIQUE)
+   ========================================================================== */
+@keyframes cta-halo-once {
+  0% {
+    box-shadow: 0 0 0 0 rgba(31, 157, 92, 0.45);
+  }
+
+  100% {
+    box-shadow: 0 0 0 14px rgba(31, 157, 92, 0);
+  }
+}
+
+.cta-button-pulse {
+  animation: cta-halo-once 1200ms var(--ease-out) 600ms 1 normal forwards;
+}
+
+/* ==========================================================================
+   7. HEADER & NAVIGATION
+   ========================================================================== */
+.header-scrolled {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid var(--gris-bordure) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.nav-link-track {
+  position: relative;
+}
+
+.nav-link-track::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--vert-accent);
+  border-radius: 9999px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 250ms var(--ease-out);
+}
+
+.nav-link-track.is-active::after {
+  transform: scaleX(1);
+  transition: transform 400ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-link-track:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* ==========================================================================
+   8. HOVER FLUIDE & FOCUS (Propriétés explicites, composition GPU 60 fps)
+   ========================================================================== */
+@media (hover: hover) and (pointer: fine) {
+
+  /* Marquee Card hover */
+  .marquee-card {
+    transition: transform 250ms var(--ease-out), border-color 250ms var(--ease-out);
+  }
+
+  .marquee-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--vert-accent);
+  }
+
+  /* Identity image hover */
+  .identity-image-wrap:hover img {
+    transform: scale(1.04) !important;
+    transition: transform 700ms var(--ease-out);
+  }
+
+  /* --- EXPERTISE CARD HOVER (Carte interne séparée du wrapper) --- */
+  .expertise-card-inner {
+    transition: transform 400ms var(--ease-out),
+      box-shadow 350ms var(--ease-out);
+    will-change: transform, box-shadow;
+  }
+
+  .expertise-card-inner:hover,
+  .expertise-card-inner:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.12), inset 0 0 0 1px rgba(31, 157, 92, 0.55);
+  }
+
+  .expertise-card-inner .expertise-img {
+    transition: transform 800ms var(--ease-out);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  .expertise-card-inner:hover .expertise-img,
+  .expertise-card-inner:focus-visible .expertise-img {
+    transform: translateZ(0) scale(1.05) !important;
+  }
+
+  .expertise-card-inner .expertise-overlay {
+    transition: opacity 350ms var(--ease-out);
+  }
+
+  .expertise-card-inner:hover .expertise-overlay,
+  .expertise-card-inner:focus-visible .expertise-overlay {
+    opacity: 0.95;
+  }
+
+  .expertise-card-inner .expertise-arrow-btn {
+    transition: background-color 250ms var(--ease-out),
+      color 250ms var(--ease-out),
+      border-color 250ms var(--ease-out);
+  }
+
+  .expertise-card-inner:hover .expertise-arrow-btn,
+  .expertise-card-inner:focus-visible .expertise-arrow-btn {
+    background-color: var(--vert-accent) !important;
+    color: #0B1620 !important;
+    border-color: var(--vert-accent) !important;
+  }
+
+  .expertise-card-inner .expertise-arrow-icon {
+    transition: transform 300ms var(--ease-out);
+  }
+
+  .expertise-card-inner:hover .expertise-arrow-icon,
+  .expertise-card-inner:focus-visible .expertise-arrow-icon {
+    transform: translate(2px, -2px);
+  }
+
+  /* --- PROJECTS CARD HOVER (Carte interne séparée du wrapper) --- */
+  .project-card-inner {
+    transition: transform 450ms var(--ease-out),
+      box-shadow 450ms var(--ease-out);
+    will-change: transform, box-shadow;
+  }
+
+  .project-card-inner:hover,
+  .project-card-inner:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.12);
+  }
+
+  .project-card-inner .project-img {
+    transition: transform 800ms var(--ease-out);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  .project-card-inner:hover .project-img,
+  .project-card-inner:focus-visible .project-img {
+    transform: translateZ(0) scale(1.04) !important;
+  }
+
+  .project-card-inner .project-card-title {
+    transition: color 250ms var(--ease-out);
+  }
+
+  .project-card-inner:hover .project-card-title,
+  .project-card-inner:focus-visible .project-card-title {
+    color: var(--vert-principal) !important;
+  }
+
+  .project-card-inner .project-arrow-icon {
+    transition: transform 300ms var(--ease-out);
+  }
+
+  .project-card-inner:hover .project-arrow-icon,
+  .project-card-inner:focus-visible .project-arrow-icon {
+    transform: translateX(3px);
+  }
+
+  /* Footer Links hover */
+  .footer-link-hover {
+    transition: color 250ms var(--ease-out), transform 250ms var(--ease-out);
+    display: inline-block;
+  }
+
+  .footer-link-hover:hover {
+    color: #FFFFFF !important;
+    transform: translateX(3px);
+  }
+}
+
+/* Focus visible uniforme */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--vert-accent) !important;
+  outline-offset: 3px !important;
+}
+
+/* ==========================================================================
+   9. RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+/* Tablette 768px à 1023px : pas de parallaxe, pas de clip-path complexes */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .js-anim .reveal--clip-left {
+    clip-path: none;
+    opacity: 0;
+    transform: translateY(var(--reveal-distance));
+    transition: opacity var(--dur-base) var(--ease-out) var(--delay, 0ms),
+      transform var(--dur-base) var(--ease-out) var(--delay, 0ms);
+  }
+
+  .js-anim .reveal--clip-left.is-visible {
+    clip-path: none;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile < 768px : fade + translateY(16px), stagger 80ms, pas de scale */
+@media (max-width: 767px) {
+  :root {
+    --stagger: 60ms;
+    --reveal-distance: 14px;
+  }
+
+  .js-anim .card-reveal-wrap {
+    transform: translateY(16px);
+    transition: opacity 600ms var(--ease-out) var(--delay, 0ms),
+      transform 600ms var(--ease-out) var(--delay, 0ms);
+  }
+
+  .js-anim .card-reveal-wrap.is-visible {
+    transform: translateY(0);
+  }
+
+  .js-anim .card-reveal-wrap .card-scale-img-entry {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .js-anim .reveal--clip-left,
+  .js-anim .reveal--clip-up {
+    clip-path: none !important;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 600ms var(--ease-out) var(--delay, 0ms),
+      transform 600ms var(--ease-out) var(--delay, 0ms);
+  }
+
+  .js-anim .reveal--clip-left.is-visible,
+  .js-anim .reveal--clip-up.is-visible {
+    clip-path: none !important;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .js-anim .reveal--scale-img img {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .js-anim .hero-bg-img {
+    transform: scale(1.05);
+    transition: transform 1400ms var(--ease-out);
+  }
+
+  .js-anim.hero-ready .hero-bg-img {
+    transform: scale(1);
+  }
+
+  .js-anim .page-hero-bg-img {
+    transform: scale(1.05);
+    transition: transform 1400ms var(--ease-out);
+  }
+
+  .js-anim.page-hero-ready .page-hero-bg-img {
+    transform: scale(1);
+  }
+
+  .js-anim .page-hero-h1 {
+    filter: none !important;
+  }
+
+  .js-anim .intro-expertises-h2 {
+    filter: none !important;
+    transform: translateY(14px);
+    transition-delay: 60ms;
+  }
+
+  .js-anim .intro-expertises-line {
+    transition-delay: 120ms;
+  }
+
+  .js-anim .intro-expertises-p {
+    transform: translateY(14px);
+    transition-delay: 180ms;
+  }
+
+  .js-anim .real-header-h2 {
+    filter: none !important;
+    transform: translateY(14px);
+  }
+
+  .js-anim .bento-card-wrap {
+    transform: translateY(14px) !important;
+  }
+
+  .js-anim .bento-card-img {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   10. PREFERS-REDUCED-MOTION (Accessibilité absolue)
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .reveal--fade,
+  .reveal--clip-up,
+  .reveal--clip-left,
+  .reveal--scale-img,
+  .reveal--scale-img img,
+  .reveal--line,
+  .reveal--line-center,
+  .reveal--line-y,
+  .check-pop,
+  .hero-anim-item,
+  .hero-bg-img,
+  .hero-badge-anim,
+  .hero-h1-anim,
+  .hero-highlight-word,
+  .hero-p-anim,
+  .hero-btn-1,
+  .hero-btn-2,
+  .card-reveal-wrap,
+  .card-content-fade,
+  .card-scale-img-entry {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .hero-highlight-word {
+    color: #34D399 !important;
+  }
+
+  .animate-marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .marquee-scroll-container {
+    overflow-x: auto !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .expertise-card-inner,
+  .project-card-inner {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* ==========================================================================
+   11. EXTENSIONS PAGE À PROPOS (/a-propos)
+   ========================================================================== */
+
+/* --- PAGE HERO INTERNE --- */
+.page-hero-bg-img,
+.page-hero-badge,
+.page-hero-h1,
+.page-hero-dot,
+.page-hero-p,
+.page-hero-breadcrumb-line,
+.page-hero-breadcrumb-nav,
+.media__clip-up,
+.media__clip-left,
+.pillar-line-y,
+.pillar-node-pop,
+.iso-card-wrap,
+.iso-picto-pop,
+.iso-text-fade,
+.standards-row-wrap,
+.timeline-dashed-line,
+.timeline-vertical-line,
+.timeline-step-wrap,
+.timeline-circle {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  clip-path: none;
+}
+
+/* PageHero initial states under .js-anim */
+.js-anim .page-hero-bg-img {
+  transform: scale(1.08);
+  transition: transform 1800ms var(--ease-out);
+  will-change: transform;
+}
+
+.js-anim.page-hero-ready .page-hero-bg-img {
+  transform: scale(1);
+  will-change: auto;
+}
+
+.js-anim .page-hero-badge {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 600ms var(--ease-out) 250ms,
+    transform 600ms var(--ease-out) 250ms;
+}
+
+.js-anim.page-hero-ready .page-hero-badge {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-anim .page-hero-h1 {
+  opacity: 0;
+  transform: translateY(24px);
+  filter: blur(8px);
+  transition: opacity 900ms var(--ease-out) 380ms,
+    transform 900ms var(--ease-out) 380ms,
+    filter 900ms var(--ease-out) 380ms;
+  will-change: opacity, transform, filter;
+}
+
+.js-anim.page-hero-ready .page-hero-h1 {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  will-change: auto;
+}
+
+.js-anim .page-hero-dot {
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out) 980ms;
+}
+
+.js-anim.page-hero-ready .page-hero-dot {
+  opacity: 1;
+}
+
+.js-anim .page-hero-p {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 700ms var(--ease-out) 650ms,
+    transform 700ms var(--ease-out) 650ms;
+}
+
+.js-anim.page-hero-ready .page-hero-p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-anim .page-hero-breadcrumb-line {
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 600ms var(--ease-out) 850ms;
+}
+
+.js-anim.page-hero-ready .page-hero-breadcrumb-line {
+  transform: scaleX(1);
+}
+
+.js-anim .page-hero-breadcrumb-nav {
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out) 1000ms;
+}
+
+.js-anim.page-hero-ready .page-hero-breadcrumb-nav {
+  opacity: 1;
+}
+
+/* --- INTRODUCTION DE LA PAGE EXPERTISES --- */
+.intro-expertises-label,
+.intro-expertises-h2,
+.intro-expertises-line,
+.intro-expertises-p {
+  opacity: 1;
+  transform: none;
+}
+
+.js-anim .intro-expertises-label {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 600ms var(--ease-out),
+    transform 600ms var(--ease-out);
+  will-change: opacity, transform;
+}
+
+.js-anim .intro-expertises-label.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-anim .intro-expertises-h2 {
+  opacity: 0;
+  transform: translateY(20px);
+  filter: blur(6px);
+  transition: opacity 800ms var(--ease-out) 90ms,
+    transform 800ms var(--ease-out) 90ms,
+    filter 800ms var(--ease-out) 90ms;
+  will-change: opacity, transform, filter;
+}
+
+.js-anim .intro-expertises-h2.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.js-anim .intro-expertises-p {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 700ms var(--ease-out) 270ms,
+    transform 700ms var(--ease-out) 270ms;
+  will-change: opacity, transform;
+}
+
+.js-anim .intro-expertises-p.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-anim .intro-expertises-label.is-visible,
+.js-anim .intro-expertises-h2.is-visible,
+.js-anim .intro-expertises-line.is-visible,
+.js-anim .intro-expertises-p.is-visible {
+  will-change: auto;
+}
+
+/* ==========================================================================
+   RÉALISATIONS : EN-TÊTE, KEY FIGURES & CARTES BENTO
+   ========================================================================== */
+
+/* 1. En-tête de section */
+.js-anim .real-header-badge {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 600ms var(--ease-out),
+    transform 600ms var(--ease-out);
+  will-change: opacity, transform;
+}
+
+.js-anim .real-header-badge.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  will-change: auto;
+}
+
+.js-anim .real-header-h2 {
+  opacity: 0;
+  transform: translateY(20px);
+  filter: blur(6px);
+  transition: opacity 800ms var(--ease-out) 90ms,
+    transform 800ms var(--ease-out) 90ms,
+    filter 800ms var(--ease-out) 90ms;
+  will-change: opacity, transform, filter;
+}
+
+.js-anim .real-header-h2.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  will-change: auto;
+}
+
+/* 2. KeyFigures : bordures et séparateurs */
+.key-figures-line-h {
+  transform: scaleX(0);
+  transition: transform 800ms var(--ease-out);
+  will-change: transform;
+}
+
+.key-figures-line-h.is-visible {
+  transform: scaleX(1);
+  will-change: auto;
+}
+
+.key-figures-sep-v {
+  transform: scaleY(0);
+  transition: transform 700ms var(--ease-out);
+  will-change: transform;
+}
+
+.key-figures-sep-v.is-visible {
+  transform: scaleY(1);
+  will-change: auto;
+}
+
+.js-anim .key-figures-col {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 700ms var(--ease-out) var(--delay, 0ms),
+    transform 700ms var(--ease-out) var(--delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.js-anim .key-figures-col.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  will-change: auto;
+}
+
+/* 3. Cartes Bento */
+.bento-card-wrap {
+  opacity: 1;
+  transform: none;
+}
+
+.js-anim .bento-card-wrap {
+  opacity: 0;
+  transform: translateY(32px) scale(0.98);
+  transition: opacity 900ms var(--ease-out) var(--delay, 0ms),
+    transform 900ms var(--ease-out) var(--delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.js-anim .bento-card-wrap.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.js-anim .bento-card-wrap.is-done {
+  transform: none !important;
+  will-change: auto !important;
+}
+
+.js-anim .bento-card-img {
+  transform: scale(1.1);
+  transition: transform 1300ms var(--ease-out) var(--delay, 0ms);
+  will-change: transform;
+}
+
+.js-anim .bento-card-wrap.is-visible .bento-card-img {
+  transform: scale(1);
+}
+
+.js-anim .bento-card-wrap.is-done .bento-card-img {
+  will-change: auto;
+}
+
+.js-anim .bento-card-content {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 500ms var(--ease-out) calc(var(--delay, 0ms) + 250ms),
+    transform 500ms var(--ease-out) calc(var(--delay, 0ms) + 250ms);
+}
+
+.js-anim .bento-card-wrap.is-visible .bento-card-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Couche de hover dédiée sur les cartes Bento */
+.bento-card-hover-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-color: rgba(6, 21, 15, 0.18);
+  opacity: 0;
+  box-shadow: inset 0 0 0 1.5px var(--vert-accent);
+  border-radius: 16px;
+  transition: opacity 300ms var(--ease-out), box-shadow 300ms var(--ease-out);
+  z-index: 5;
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+  .bento-card-wrap.is-done:hover .bento-card-hover-layer,
+  .bento-card-wrap.is-done:focus-within .bento-card-hover-layer {
+    opacity: 1;
+  }
+
+  .bento-card-wrap.is-done:hover .bento-card-img {
+    transform: scale(1.05) !important;
+    transition: transform 800ms var(--ease-out) !important;
+  }
+}
+
+/* --- MEDIA CLIPS (Qui sommes-nous & Engagement) --- */
+.js-anim .media__clip-up {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1100ms var(--ease-in-out) var(--delay, 0ms);
+  will-change: clip-path;
+}
+
+.js-anim .media__clip-up.is-visible {
+  clip-path: inset(0);
+  will-change: auto;
+}
+
+.js-anim .media__clip-left {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1100ms var(--ease-in-out) var(--delay, 0ms);
+  will-change: clip-path;
+}
+
+.js-anim .media__clip-left.is-visible {
+  clip-path: inset(0);
+  will-change: auto;
+}
+
+.js-anim .media-scale-img {
+  transform: translateZ(0) scale(1.12);
+  transition: transform 1400ms var(--ease-out) var(--delay, 0ms);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.js-anim.is-visible .media-scale-img,
+.js-anim .is-visible .media-scale-img {
+  transform: translateZ(0) scale(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .media-container:hover .media-scale-img {
+    transform: translateZ(0) scale(1.04) !important;
+    transition: transform 700ms var(--ease-out) !important;
+  }
+}
+
+/* --- ENGAGEMENT PILIERS --- */
+.js-anim .pillar-line-y {
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 1000ms var(--ease-out);
+  will-change: transform;
+}
+
+.js-anim .pillar-line-y.is-visible {
+  transform: scaleY(1);
+  will-change: auto;
+}
+
+.js-anim .pillar-node-pop {
+  transform: scale(0.4);
+  opacity: 0;
+  transition: transform 400ms var(--ease-out) var(--delay, 0ms),
+    opacity 300ms var(--ease-out) var(--delay, 0ms);
+  will-change: transform, opacity;
+}
+
+.js-anim .pillar-node-pop.is-visible {
+  transform: scale(1);
+  opacity: 1;
+  will-change: auto;
+}
+
+/* --- STANDARDS & CERTIFICATIONS --- */
+.js-anim .iso-card-wrap {
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
+  transition: opacity 800ms var(--ease-out) var(--delay, 0ms),
+    transform 800ms var(--ease-out) var(--delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.js-anim .iso-card-wrap.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  will-change: auto;
+}
+
+.js-anim .iso-picto-pop {
+  transform: scale(0.85);
+  opacity: 0;
+  transition: transform 500ms var(--ease-out) 300ms,
+    opacity 500ms var(--ease-out) 300ms;
+}
+
+.js-anim.is-visible .iso-picto-pop,
+.js-anim .is-visible .iso-picto-pop {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.js-anim .iso-text-fade {
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out) 250ms;
+}
+
+.js-anim.is-visible .iso-text-fade,
+.js-anim .is-visible .iso-text-fade {
+  opacity: 1;
+}
+
+/* Standards Rows (Droite) */
+.js-anim .standards-row-wrap {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 800ms var(--ease-out) var(--delay, 0ms),
+    transform 800ms var(--ease-out) var(--delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.js-anim .standards-row-wrap.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-anim .standards-row-wrap.is-done {
+  transform: none !important;
+  transition: none !important;
+  will-change: auto !important;
+}
+
+.js-anim .standards-icon-pop {
+  transform: scale(0.7);
+  opacity: 0;
+  transition: transform 400ms var(--ease-out) var(--delay, 0ms),
+    opacity 400ms var(--ease-out) var(--delay, 0ms);
+}
+
+.js-anim .standards-row-wrap.is-visible .standards-icon-pop {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.js-anim .standards-content-fade {
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out) calc(var(--delay, 0ms) + 200ms);
+}
+
+.js-anim .standards-row-wrap.is-visible .standards-content-fade {
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .standards-row-inner {
+    cursor: pointer;
+  }
+
+  .standards-row-inner .standards-icon-box {
+    transition: transform 300ms var(--ease-out), border-color 300ms var(--ease-out);
+  }
+
+  .standards-row-inner:hover .standards-icon-box,
+  .standards-row-inner:focus-visible .standards-icon-box {
+    transform: translateY(-2px);
+    border-color: var(--vert-accent) !important;
+  }
+
+  .standards-row-inner .standards-row-title {
+    transition: color 250ms var(--ease-out);
+  }
+
+  .standards-row-inner:hover .standards-row-title,
+  .standards-row-inner:focus-visible .standards-row-title {
+    color: var(--vert-principal) !important;
+  }
+}
+
+/* --- NOTRE APPROCHE OPÉRATIONNELLE : LE PARCOURS HAUT DE GAMME --- */
+
+:root {
+  --ease-track: cubic-bezier(0.45, 0, 0.2, 1);
+}
+
+/* 1. Tracé de la ligne pointillée horizontale (desktop) */
+.js-anim .timeline-dashed-line {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 2400ms var(--ease-track);
+  will-change: clip-path;
+}
+
+.js-anim .timeline--active .timeline-dashed-line,
+.js-anim .timeline-dashed-line.is-visible {
+  clip-path: inset(0);
+}
+
+.js-anim .timeline--is-done .timeline-dashed-line {
+  will-change: auto;
+}
+
+/* 2. Tracé de la ligne verticale (mobile) */
+.js-anim .timeline-vertical-line {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1400ms var(--ease-track);
+  will-change: clip-path;
+}
+
+.js-anim .timeline--active .timeline-vertical-line,
+.js-anim .timeline-vertical-line.is-visible {
+  clip-path: inset(0);
+}
+
+.js-anim .timeline--is-done .timeline-vertical-line {
+  will-change: auto;
+}
+
+/* 3. Point voyageur (10px, traîne 28px) synchronisé à 2400ms */
+.timeline__traveler {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  margin-left: -5px;
+  pointer-events: none;
+  z-index: 25;
+}
+
+.js-anim .timeline__traveler {
+  opacity: 0;
+  transform: translateX(0);
+}
+
+.js-anim .timeline--active .timeline__traveler {
+  opacity: 1;
+  transform: translateX(var(--track-width, 800px));
+  transition: transform 2400ms var(--ease-track);
+  will-change: transform;
+}
+
+.js-anim .timeline--is-done .timeline__traveler {
+  opacity: 0 !important;
+  display: none !important;
+  will-change: auto !important;
+}
+
+.timeline__traveler-dot {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background-color: var(--vert-accent);
+}
+
+/* Traîne de 28px dégradée vert vers transparent derrière le point */
+.timeline__traveler-dot::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 5px;
+  width: 28px;
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(to left, var(--vert-accent), transparent);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Fondu de disparition à l'arrivée (t = 2400ms -> 2700ms, 300ms) */
+@keyframes traveler-fade-out {
+
+  0%,
+  88.8% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.js-anim .timeline--active .timeline__traveler-dot {
+  animation: traveler-fade-out 2700ms var(--ease-out) forwards;
+}
+
+/* 4. Délais échelonnés des 4 étapes */
+/* Desktop >= 1024px : 0, 800, 1600, 2400ms */
+@media (min-width: 1024px) {
+  .timeline-step-wrap:nth-child(1) {
+    --step-delay: 0ms;
+  }
+
+  .timeline-step-wrap:nth-child(2) {
+    --step-delay: 800ms;
+  }
+
+  .timeline-step-wrap:nth-child(3) {
+    --step-delay: 1600ms;
+  }
+
+  .timeline-step-wrap:nth-child(4) {
+    --step-delay: 2400ms;
+  }
+}
+
+/* Tablette 768px-1023px : 0, 200, 400, 600ms */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .timeline-step-wrap:nth-child(1) {
+    --step-delay: 0ms;
+  }
+
+  .timeline-step-wrap:nth-child(2) {
+    --step-delay: 200ms;
+  }
+
+  .timeline-step-wrap:nth-child(3) {
+    --step-delay: 400ms;
+  }
+
+  .timeline-step-wrap:nth-child(4) {
+    --step-delay: 600ms;
+  }
+}
+
+/* 5. Cercle numéroté (contour -> fond vert principal, scale 0.85 -> 1) */
+.timeline-circle {
+  position: relative;
+  border: 2px solid var(--vert-accent);
+  background-color: #FFFFFF;
+  color: var(--vert-principal);
+}
+
+.js-anim .timeline-circle {
+  opacity: 0;
+  transform: scale(0.85);
+  will-change: transform, opacity, background-color, color, border-color;
+}
+
+.js-anim .timeline--active .timeline-circle {
+  opacity: 1;
+  transform: scale(1);
+  background-color: var(--vert-principal);
+  color: #FFFFFF;
+  border-color: var(--vert-principal);
+  transition: opacity 350ms var(--ease-out) var(--step-delay, 0ms),
+    transform 400ms var(--ease-out) var(--step-delay, 0ms),
+    background-color 350ms var(--ease-out) var(--step-delay, 0ms),
+    color 350ms var(--ease-out) var(--step-delay, 0ms),
+    border-color 350ms var(--ease-out) var(--step-delay, 0ms);
+}
+
+/* Anneau d'onde : scale(1) -> scale(1.9), opacity 0.45 -> 0 en 700ms (UNE SEULE FOIS) */
+.timeline-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: 9999px;
+  border: 2px solid var(--vert-accent);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(1);
+}
+
+@keyframes timeline-ring-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .js-anim .timeline--active .timeline-ring {
+    animation: timeline-ring-pulse 700ms var(--ease-out) var(--step-delay, 0ms) forwards;
+  }
+}
+
+/* 6. Textes des étapes : fade + translateY(16px) -> 0 avec 150ms + stagger 90ms */
+.js-anim .timeline-step-phase,
+.js-anim .timeline-step-title,
+.js-anim .timeline-step-desc {
+  opacity: 0;
+  transform: translateY(16px);
+  will-change: opacity, transform;
+}
+
+.js-anim .timeline--active .timeline-step-phase {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 700ms var(--ease-out) calc(var(--step-delay, 0ms) + 150ms),
+    transform 700ms var(--ease-out) calc(var(--step-delay, 0ms) + 150ms);
+}
+
+.js-anim .timeline--active .timeline-step-title {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 700ms var(--ease-out) calc(var(--step-delay, 0ms) + 240ms),
+    transform 700ms var(--ease-out) calc(var(--step-delay, 0ms) + 240ms);
+}
+
+.js-anim .timeline--active .timeline-step-desc {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 700ms var(--ease-out) calc(var(--step-delay, 0ms) + 330ms),
+    transform 700ms var(--ease-out) calc(var(--step-delay, 0ms) + 330ms);
+}
+
+/* 7. Retrait de will-change après animation (.timeline--is-done) */
+.js-anim .timeline--is-done .timeline-step-phase,
+.js-anim .timeline--is-done .timeline-step-title,
+.js-anim .timeline--is-done .timeline-step-desc,
+.js-anim .timeline--is-done .timeline-circle {
+  opacity: 1 !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* 8. Mobile (< 768px) : timeline verticale & observation individuelle */
+@media (max-width: 767px) {
+  .timeline-ring {
+    display: none !important;
+  }
+
+  .js-anim .timeline-step-wrap:not(.is-mobile-visible) .timeline-circle,
+  .js-anim .timeline-step-wrap:not(.is-mobile-visible) .timeline-step-phase,
+  .js-anim .timeline-step-wrap:not(.is-mobile-visible) .timeline-step-title,
+  .js-anim .timeline-step-wrap:not(.is-mobile-visible) .timeline-step-desc {
+    opacity: 0 !important;
+    transform: translateY(14px) !important;
+  }
+
+  .js-anim .timeline-step-wrap.is-mobile-visible .timeline-circle {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    background-color: var(--vert-principal) !important;
+    color: #FFFFFF !important;
+    border-color: var(--vert-principal) !important;
+    transition: background-color 300ms var(--ease-out),
+      color 300ms var(--ease-out),
+      border-color 300ms var(--ease-out),
+      transform 350ms var(--ease-out),
+      opacity 300ms var(--ease-out) !important;
+  }
+
+  .js-anim .timeline-step-wrap.is-mobile-visible .timeline-step-phase {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: opacity 500ms var(--ease-out) 60ms,
+      transform 500ms var(--ease-out) 60ms !important;
+  }
+
+  .js-anim .timeline-step-wrap.is-mobile-visible .timeline-step-title {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: opacity 500ms var(--ease-out) 120ms,
+      transform 500ms var(--ease-out) 120ms !important;
+  }
+
+  .js-anim .timeline-step-wrap.is-mobile-visible .timeline-step-desc {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: opacity 500ms var(--ease-out) 180ms,
+      transform 500ms var(--ease-out) 180ms !important;
+  }
+}
+
+/* 9. Hover (Desktop uniquement, après .is-done) */
+@media (hover: hover) and (pointer: fine) {
+  .timeline-step-inner {
+    cursor: default;
+  }
+
+  /* Baisse d'opacité à 0.72 des autres étapes */
+  .timeline--is-done .timeline-grid:hover .timeline-step-wrap {
+    opacity: 0.72;
+    transition: opacity 300ms var(--ease-out);
+  }
+
+  .timeline--is-done .timeline-grid .timeline-step-wrap:hover,
+  .timeline--is-done .timeline-grid .timeline-step-wrap:focus-within {
+    opacity: 1 !important;
+    transition: opacity 300ms var(--ease-out) !important;
+  }
+
+  /* Le cercle se soulève de 2px */
+  .timeline--is-done .timeline-step-wrap:hover .timeline-circle,
+  .timeline--is-done .timeline-step-wrap:focus-within .timeline-circle {
+    transform: translateY(-2px) !important;
+    transition: transform 300ms var(--ease-out) !important;
+  }
+
+  /* Le titre passe au vert foncé */
+  .timeline--is-done .timeline-step-wrap:hover .timeline-step-title,
+  .timeline--is-done .timeline-step-wrap:focus-within .timeline-step-title {
+    color: var(--vert-principal) !important;
+    transition: color 250ms var(--ease-out) !important;
+  }
+}
+
+/* --- PREFERS-REDUCED-MOTION FOR A-PROPOS EXTENSIONS --- */
+@media (prefers-reduced-motion: reduce) {
+
+  .page-hero-bg-img,
+  .page-hero-badge,
+  .page-hero-h1,
+  .page-hero-dot,
+  .page-hero-p,
+  .page-hero-breadcrumb-line,
+  .page-hero-breadcrumb-nav,
+  .media__clip-up,
+  .media__clip-left,
+  .media-scale-img,
+  .pillar-line-y,
+  .pillar-node-pop,
+  .iso-card-wrap,
+  .iso-picto-pop,
+  .iso-text-fade,
+  .standards-row-wrap,
+  .standards-icon-pop,
+  .standards-content-fade,
+  .timeline-dashed-line,
+  .timeline-vertical-line,
+  .timeline__line,
+  .timeline__traveler,
+  .timeline-ring,
+  .timeline-step-wrap,
+  .timeline-circle,
+  .timeline-step-content,
+  .timeline-step-phase,
+  .timeline-step-title,
+  .timeline-step-desc,
+  .intro-expertises-label,
+  .intro-expertises-h2,
+  .intro-expertises-line,
+  .intro-expertises-p,
+  .real-header-badge,
+  .real-header-h2,
+  .key-figures-line-h,
+  .key-figures-sep-v,
+  .key-figures-col,
+  .bento-card-wrap,
+  .bento-card-img,
+  .bento-card-content,
+  .bento-card-hover-layer {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .timeline__traveler,
+  .timeline-ring {
+    display: none !important;
+  }
+
+  .timeline-circle {
+    background-color: var(--vert-principal) !important;
+    color: #FFFFFF !important;
+    border-color: var(--vert-principal) !important;
+  }
+}
+
+/* ==========================================================================
+   MÉDIAS PORTRAITS (Qui sommes-nous & Engagement) - ARCHITECTURE RÈGLE A
+   L'observateur est sur .media (non clippé, dimensions réelles).
+   Les masques et échelles s'appliquent par descendance.
+   ========================================================================== */
+.media,
+.media__clip,
+.media__clip-up,
+.media__clip-left,
+.media__badge,
+.media-scale-img {
+  opacity: 1;
+  transform: none;
+  clip-path: none;
+}
+
+/* État masqué initial sous .js-anim */
+.js-anim .media:not(.is-visible) .media__clip-up {
+  clip-path: inset(100% 0 0 0);
+}
+
+.js-anim .media.is-visible .media__clip-up {
+  clip-path: inset(0);
+  transition: clip-path 1100ms var(--ease-in-out);
+  will-change: clip-path;
+}
+
+.js-anim .media:not(.is-visible) .media__clip-left {
+  clip-path: inset(0 100% 0 0);
+}
+
+.js-anim .media.is-visible .media__clip-left {
+  clip-path: inset(0);
+  transition: clip-path 1100ms var(--ease-in-out);
+  will-change: clip-path;
+}
+
+/* Badge flottant dans Engagement (sibling de .media__clip-left) */
+.js-anim .media:not(.is-visible) .media__badge {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.js-anim .media.is-visible .media__badge {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 600ms var(--ease-out) 900ms, transform 600ms var(--ease-out) 900ms;
+}
+
+/* Image interne avec mise au point et variable CSS pour parallaxe */
+.media-scale-img {
+  transform: translateY(var(--parallax-y, 0px)) scale(var(--img-scale, 1));
+  transition: transform 1400ms var(--ease-out);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.js-anim .media:not(.is-visible) .media-scale-img {
+  --img-scale: 1.12;
+}
+
+.js-anim .media.is-visible .media-scale-img {
+  --img-scale: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .media:hover .media-scale-img {
+    transform: translateY(var(--parallax-y, 0px)) scale(1.04) !important;
+    transition: transform 700ms var(--ease-out) !important;
+  }
+}
+
+/* ==========================================================================
+   BOUTONS DU BLOC CTA FINAL (Contactez-nous & Réalisations)
+   ========================================================================== */
+.cta-primary-btn,
+.cta-secondary-btn {
+  opacity: 1;
+  transform: none;
+}
+
+.js-anim .cta-primary-btn {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 600ms var(--ease-out) 270ms,
+    transform 600ms var(--ease-out) 270ms;
+}
+
+.js-anim .cta-primary-btn.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-anim .cta-secondary-btn {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 600ms var(--ease-out) 360ms,
+    transform 600ms var(--ease-out) 360ms;
+}
+
+.js-anim .cta-secondary-btn.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cta-primary-btn.is-pulsed {
+  animation: cta-halo-once 1200ms var(--ease-out) 1 normal forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .media:not(.is-visible) .media__clip-up,
+  .media:not(.is-visible) .media__clip-left,
+  .media__clip-up,
+  .media__clip-left,
+  .media__badge,
+  .media-scale-img,
+  .cta-primary-btn,
+  .cta-secondary-btn {
+    opacity: 1 !important;
+    clip-path: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   PAGE /contact - ANIMATIONS HAUT DE GAMME (COLONNE GAUCHE & FORMULAIRE)
+   ========================================================================== */
+
+/* 0. ÉTAT PAR DÉFAUT (Sans JavaScript actif / Sans .js-anim) */
+.contact-info-label,
+.contact-info-h2,
+.contact-info-line,
+.contact-info-p,
+.contact-coord-item,
+.contact-coord-icon-box,
+.contact-coord-line-1,
+.contact-coord-line-2,
+.contact-coord-line-3,
+.contact-sep-line,
+.contact-hours,
+.contact-emergency-card,
+.contact-emergency-dot,
+.contact-emergency-ring,
+.contact-form-card,
+.contact-form-badge,
+.contact-form-title,
+.contact-form-subtitle,
+.contact-form-sec-title,
+.contact-form-label,
+.contact-form-field,
+.contact-confidentiality-shield,
+.contact-confidentiality-text,
+.contact-submit-btn,
+.contact-success-icon,
+.contact-success-title,
+.contact-success-p {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* ==========================================================================
+   2. COLONNE GAUCHE : COORDONNÉES SOUS .js-anim
+   ========================================================================== */
+
+/* 1. Étiquette "Contactez-nous" : fade + translateY(12px) */
+.js-anim .contact-info-label {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out);
+  will-change: opacity, transform;
+}
+.contact-info-label.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 2. Titre H2 "Concrétisons vos ambitions énergétiques." en un seul bloc : fade + translateY(20px) + blur(6px) -> 0, 800ms */
+.js-anim .contact-info-h2 {
+  opacity: 0;
+  transform: translateY(20px);
+  filter: blur(6px);
+  transition: opacity 800ms var(--ease-out) 90ms,
+    transform 800ms var(--ease-out) 90ms,
+    filter 800ms var(--ease-out) 90ms;
+  will-change: opacity, transform, filter;
+}
+.contact-info-h2.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* 3. Trait d'accent signature : scaleX, origine gauche, 700ms */
+.js-anim .contact-info-line {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 700ms var(--ease-out) 180ms;
+  will-change: transform;
+}
+.contact-info-line.is-visible {
+  transform: scaleX(1);
+}
+
+/* 4. Paragraphe descriptif : fade + translateY(16px), 700ms */
+.js-anim .contact-info-p {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 700ms var(--ease-out) 270ms,
+    transform 700ms var(--ease-out) 270ms;
+  will-change: opacity, transform;
+}
+.contact-info-p.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 5. Blocs de coordonnées (chacun observé individuellement, stagger 140ms) */
+.js-anim .contact-coord-item {
+  opacity: 1;
+}
+
+/* Carré d'icône : scale 0.7 -> 1 + fade (450ms, --ease-out, sans rebond) */
+.js-anim .contact-coord-icon-box {
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 450ms var(--ease-out) var(--delay, 0ms),
+    transform 450ms var(--ease-out) var(--delay, 0ms),
+    background-color 250ms var(--ease-out);
+  will-change: opacity, transform;
+}
+.contact-coord-item.is-visible .contact-coord-icon-box {
+  opacity: 1;
+  transform: scale(1);
+}
+.contact-coord-icon-box svg {
+  transition: color 250ms var(--ease-out);
+}
+
+/* Les 3 lignes de texte : fade + translateY(12px), stagger 70ms, 150ms après l'icône */
+.js-anim .contact-coord-line-1 {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 400ms var(--ease-out) calc(var(--delay, 0ms) + 150ms),
+    transform 400ms var(--ease-out) calc(var(--delay, 0ms) + 150ms);
+  will-change: opacity, transform;
+}
+.js-anim .contact-coord-line-2 {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 400ms var(--ease-out) calc(var(--delay, 0ms) + 220ms),
+    transform 400ms var(--ease-out) calc(var(--delay, 0ms) + 220ms);
+  will-change: opacity, transform;
+}
+.js-anim .contact-coord-line-3 {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 400ms var(--ease-out) calc(var(--delay, 0ms) + 290ms),
+    transform 400ms var(--ease-out) calc(var(--delay, 0ms) + 290ms);
+  will-change: opacity, transform;
+}
+.contact-coord-item.is-visible .contact-coord-line-1,
+.contact-coord-item.is-visible .contact-coord-line-2,
+.contact-coord-item.is-visible .contact-coord-line-3 {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Retrait de will-change une fois l'entrée terminée */
+.contact-coord-item.is-done .contact-coord-icon-box,
+.contact-coord-item.is-done .contact-coord-line-1,
+.contact-coord-item.is-done .contact-coord-line-2,
+.contact-coord-item.is-done .contact-coord-line-3 {
+  will-change: auto;
+}
+
+/* Soulignement vert qui se dessine en scaleX(0 -> 1, 250ms) */
+.contact-coord-underline {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+  background-color: var(--vert-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 250ms var(--ease-out);
+}
+
+/* Hover (desktop) sur chaque bloc de coordonnées après .is-done */
+@media (hover: hover) and (pointer: fine) {
+  .contact-coord-item.is-done:hover .contact-coord-icon-box {
+    transform: translateY(-2px);
+    background-color: var(--vert-principal) !important;
+  }
+  .contact-coord-item.is-done:hover .contact-coord-icon-box svg {
+    color: #FFFFFF !important;
+  }
+  .contact-coord-item.is-done:hover .contact-coord-link {
+    color: var(--vert-accent) !important;
+  }
+  .contact-coord-item.is-done:hover .contact-coord-underline {
+    transform: scaleX(1);
+  }
+}
+
+/* 6. Séparateur fin : scaleX, 700ms */
+.js-anim .contact-sep-line {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 700ms var(--ease-out);
+  will-change: transform;
+}
+.contact-sep-line.is-visible {
+  transform: scaleX(1);
+}
+
+/* 7. Ligne d'horaires : fade + translateY(10px) */
+.js-anim .contact-hours {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 600ms var(--ease-out) 150ms,
+    transform 600ms var(--ease-out) 150ms;
+}
+.contact-hours.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 8. Carte d'urgence : fade + translateY(14px) */
+.js-anim .contact-emergency-card {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 600ms var(--ease-out) var(--delay, 360ms),
+    transform 600ms var(--ease-out) var(--delay, 360ms);
+  will-change: opacity, transform;
+}
+.contact-emergency-card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.contact-emergency-card.is-done {
+  will-change: auto;
+}
+
+/* Point vert scale 0.5 -> 1 (400ms) */
+.js-anim .contact-emergency-dot {
+  transform: scale(0.5);
+  transition: transform 400ms var(--ease-out) calc(var(--delay, 360ms) + 100ms);
+}
+.contact-emergency-card.is-visible .contact-emergency-dot {
+  transform: scale(1);
+}
+
+/* Onde unique discrète (anneau scale 1 -> 2.4, opacity .4 -> 0, 900ms, une fois) */
+.contact-emergency-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--vert-accent);
+  opacity: 0;
+  pointer-events: none;
+}
+.contact-emergency-card.is-visible .contact-emergency-ring {
+  animation: contact-emergency-wave 900ms var(--ease-out) 500ms 1 forwards;
+}
+@keyframes contact-emergency-wave {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   3. CARTE DU FORMULAIRE (MOMENT FORT)
+   ========================================================================== */
+
+/* 1. Carte entière : fade + translateY(28px), 900ms, --ease-out */
+.js-anim .contact-form-card {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 900ms var(--ease-out) 200ms,
+    transform 900ms var(--ease-out) 200ms;
+  will-change: opacity, transform;
+}
+.contact-form-card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.contact-form-card.is-done {
+  will-change: auto;
+}
+
+/* 2. Titre et sous-titre de la carte : fade + translateY(14px), 250ms après la carte */
+.js-anim .contact-form-badge {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 500ms var(--ease-out) 450ms,
+    transform 500ms var(--ease-out) 450ms;
+}
+.js-anim .contact-form-title {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 600ms var(--ease-out) 540ms,
+    transform 600ms var(--ease-out) 540ms;
+}
+.js-anim .contact-form-subtitle {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 600ms var(--ease-out) 630ms,
+    transform 600ms var(--ease-out) 630ms;
+}
+.contact-form-card.is-visible .contact-form-badge,
+.contact-form-card.is-visible .contact-form-title,
+.contact-form-card.is-visible .contact-form-subtitle {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Titres de sous-sections du formulaire */
+.js-anim .contact-form-sec-title {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 500ms var(--ease-out) var(--sec-delay, 680ms),
+    transform 500ms var(--ease-out) var(--sec-delay, 680ms);
+}
+.contact-form-card.is-visible .contact-form-sec-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 3. Les champs composent le formulaire rangée par rangée, stagger 80ms :
+   Label : fade + translateY(8px), 400ms
+   Champ : fade + translateY(14px), 600ms (+70ms) */
+.js-anim .contact-form-label {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 400ms var(--ease-out) var(--label-delay, 720ms),
+    transform 400ms var(--ease-out) var(--label-delay, 720ms);
+}
+.js-anim .contact-form-field {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 600ms var(--ease-out) var(--field-delay, 790ms);
+}
+.contact-form-card.is-visible .contact-form-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+.contact-form-card.is-visible .contact-form-field {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Délais par rangée */
+.contact-form-row-1 .contact-form-label { --label-delay: 720ms; }
+.contact-form-row-1 .contact-form-field { --field-delay: 790ms; }
+
+.contact-form-row-2 .contact-form-label { --label-delay: 800ms; }
+.contact-form-row-2 .contact-form-field { --field-delay: 870ms; }
+
+.contact-form-row-3 .contact-form-label { --label-delay: 880ms; }
+.contact-form-row-3 .contact-form-field { --field-delay: 950ms; }
+
+.contact-form-row-4 .contact-form-label { --label-delay: 960ms; }
+.contact-form-row-4 .contact-form-field { --field-delay: 1030ms; }
+
+.contact-form-row-5 .contact-form-label { --label-delay: 1040ms; }
+.contact-form-row-5 .contact-form-field { --field-delay: 1110ms; }
+
+.contact-form-field-upload {
+  --field-delay: 1160ms;
+}
+
+/* 4. Ligne de confidentialité (bouclier + texte) */
+.js-anim .contact-confidentiality-shield {
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 400ms var(--ease-out) 1200ms,
+    transform 400ms var(--ease-out) 1200ms;
+}
+.js-anim .contact-confidentiality-text {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 500ms var(--ease-out) 1220ms,
+    transform 500ms var(--ease-out) 1220ms;
+}
+.contact-form-card.is-visible .contact-confidentiality-shield {
+  opacity: 1;
+  transform: scale(1);
+}
+.contact-form-card.is-visible .contact-confidentiality-text {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 6. Bouton "Demander une consultation" : fade + translateY(14px), 700ms */
+.js-anim .contact-submit-btn {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 700ms var(--ease-out) 1280ms,
+    transform 700ms var(--ease-out) 1280ms,
+    background-color 250ms var(--ease-out),
+    box-shadow 250ms var(--ease-out);
+}
+.contact-form-card.is-visible .contact-submit-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Impulsion unique discrète via .is-pulsed (halo vert 1200ms) */
+.contact-submit-btn.is-pulsed {
+  animation: contact-btn-pulse 1200ms var(--ease-out) 1;
+}
+@keyframes contact-btn-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(46, 224, 123, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 12px rgba(46, 224, 123, 0);
+  }
+}
+
+/* RÈGLE G : Accessibilité immédiate du formulaire au clavier (Tab dès t=0) */
+.js-anim .contact-form-card:focus-within .contact-form-label,
+.js-anim .contact-form-card:focus-within .contact-form-field,
+.js-anim .contact-form-card:focus-within .contact-form-sec-title,
+.js-anim .contact-form-card:focus-within .contact-submit-btn {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* RÈGLE D & FOCUS INTERACTIFS (après .is-done) */
+.contact-form-card.is-done .contact-form-label,
+.contact-form-card.is-done .contact-form-field,
+.contact-form-card.is-done .contact-form-sec-title,
+.contact-form-card.is-done .contact-submit-btn {
+  transition: none;
+  will-change: auto;
+}
+
+/* Input Focus & Hover styling */
+.contact-field-input {
+  transition: border-color 250ms var(--ease-out),
+    box-shadow 250ms var(--ease-out),
+    background-color 250ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .contact-field-input:hover:not(:focus) {
+    border-color: #9ca3af;
+  }
+  .contact-submit-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background-color: #0B472C;
+  }
+  .contact-submit-btn:hover:not(:disabled) .contact-submit-arrow {
+    transform: translateX(3px);
+  }
+}
+.contact-submit-arrow {
+  transition: transform 250ms var(--ease-out);
+}
+.contact-field-input:focus {
+  border-color: var(--vert-accent) !important;
+  box-shadow: 0 0 0 3px rgba(31, 157, 92, 0.18) !important;
+  background-color: #ffffff !important;
+}
+.contact-field-group:focus-within .contact-form-label {
+  color: var(--vert-principal, #0B472C) !important;
+}
+.contact-submit-btn:focus-visible {
+  outline: 2px solid var(--vert-accent);
+  outline-offset: 3px;
+}
+
+/* RÈGLE I : Transition douce des messages d'erreur et secousse du champ */
+.contact-field-error {
+  display: block;
+  opacity: 0;
+  transform: translateY(-4px);
+  animation: contact-error-enter 250ms var(--ease-out) forwards;
+}
+@keyframes contact-error-enter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.input-error-shake {
+  animation: contact-field-shake 320ms var(--ease-out) 1;
+}
+@keyframes contact-field-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+/* État de succès : CheckCircle + textes */
+.contact-success-icon {
+  animation: contact-success-icon-pop 500ms var(--ease-out) forwards;
+}
+@keyframes contact-success-icon-pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.contact-success-title {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: contact-success-text-in 500ms var(--ease-out) 90ms forwards;
+}
+.contact-success-p {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: contact-success-text-in 500ms var(--ease-out) 180ms forwards;
+}
+@keyframes contact-success-text-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE & MOBILE (< 1024px & < 768px)
+   ========================================================================== */
+@media (max-width: 1023px) {
+  .js-anim .contact-info-h2 {
+    filter: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .js-anim .contact-info-h2 {
+    transform: translateY(14px) !important;
+  }
+  .js-anim .contact-form-card {
+    transform: translateY(14px) !important;
+  }
+  .js-anim .contact-form-field {
+    transform: translateY(14px) !important;
+  }
+}
+
+/* ==========================================================================
+   PREFERS-REDUCED-MOTION (/contact)
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .contact-info-label,
+  .contact-info-h2,
+  .contact-info-line,
+  .contact-info-p,
+  .contact-coord-item,
+  .contact-coord-icon-box,
+  .contact-coord-line-1,
+  .contact-coord-line-2,
+  .contact-coord-line-3,
+  .contact-sep-line,
+  .contact-hours,
+  .contact-emergency-card,
+  .contact-emergency-dot,
+  .contact-emergency-ring,
+  .contact-form-card,
+  .contact-form-badge,
+  .contact-form-title,
+  .contact-form-subtitle,
+  .contact-form-sec-title,
+  .contact-form-label,
+  .contact-form-field,
+  .contact-confidentiality-shield,
+  .contact-confidentiality-text,
+  .contact-submit-btn,
+  .contact-success-icon,
+  .contact-success-title,
+  .contact-success-p,
+  .input-error-shake {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}

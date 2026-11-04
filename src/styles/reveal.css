@@ -1,0 +1,98 @@
+/* ==========================================================================
+   Animations sobres & élégantes pour la section "Qui Sommes-Nous"
+   ========================================================================== */
+
+/* 1. ÉTAT PAR DÉFAUT (Visibilité immédiate sans JS) */
+.who-reveal-item,
+.who-image-box,
+.who-dots-grid {
+  opacity: 1;
+  transform: none;
+}
+
+/* 2. ÉTAT INITIAL INITIALISÉ PAR JS (.js-anim-ready) */
+.js-anim-ready .who-reveal-item {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 600ms cubic-bezier(0.2, 0.7, 0.2, 1), transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.js-anim-ready .who-image-box {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 800ms cubic-bezier(0.2, 0.7, 0.2, 1) 150ms, transform 800ms cubic-bezier(0.2, 0.7, 0.2, 1) 150ms;
+}
+
+.js-anim-ready .who-image-inner {
+  transform: scale(1.04);
+  transition: transform 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) 150ms;
+}
+
+.js-anim-ready .who-dots-grid {
+  opacity: 0;
+  transition: opacity 600ms ease 300ms;
+}
+
+/* 3. DÉCLENCHEMENT LORSQUE LA SECTION EST VISIBLE (.is-visible) */
+.js-anim-ready.is-visible .who-reveal-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger des éléments texte (80ms d'intervalle) */
+.js-anim-ready.is-visible .who-item-1 { transition-delay: 0ms; }
+.js-anim-ready.is-visible .who-item-2 { transition-delay: 80ms; }
+.js-anim-ready.is-visible .who-item-3 { transition-delay: 160ms; }
+.js-anim-ready.is-visible .who-item-4 { transition-delay: 240ms; }
+.js-anim-ready.is-visible .who-item-5 { transition-delay: 320ms; }
+
+.js-anim-ready.is-visible .who-image-box {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-anim-ready.is-visible .who-image-inner {
+  transform: scale(1);
+}
+
+.js-anim-ready.is-visible .who-dots-grid {
+  opacity: 1;
+}
+
+/* 4. ACCESSIBILITÉ PREFERS-REDUCED-MOTION */
+@media (prefers-reduced-motion: reduce) {
+  .who-reveal-item,
+  .who-image-box,
+  .who-image-inner,
+  .who-dots-grid {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+/* ==========================================================================
+   Animations douces pour la page Expertises (useReveal)
+   ========================================================================== */
+.expertise-reveal-item {
+  opacity: 1;
+  transform: none;
+}
+
+.js-anim-ready .expertise-reveal-item {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 600ms cubic-bezier(0.2, 0.7, 0.2, 1), transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.js-anim-ready.is-visible .expertise-reveal-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .expertise-reveal-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
