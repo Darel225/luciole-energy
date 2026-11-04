@@ -64,11 +64,9 @@ export default function DevisRequestModal() {
     file: null,
     fileName: '',
     fileSizeFormatted: '',
-    website: '',
   })
 
   const [errors, setErrors] = useState({})
-  const [mountTime, setMountTime] = useState(0)
 
   // Réinitialisation à l'ouverture de la modale
   useEffect(() => {
@@ -84,13 +82,11 @@ export default function DevisRequestModal() {
         file: null,
         fileName: '',
         fileSizeFormatted: '',
-        website: '',
       })
       setErrors({})
       setSubmitStatus(null)
       setIsSuccess(false)
       setIsDropdownOpen(false)
-      setMountTime(Date.now())
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
@@ -183,18 +179,6 @@ export default function DevisRequestModal() {
   // Soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    // Protection anti-bot : délai minimum
-    if (Date.now() - mountTime < 1200) {
-      setIsSuccess(true)
-      return
-    }
-
-    // Protection Honeypot
-    if (form.website && form.website.trim() !== '') {
-      setIsSuccess(true)
-      return
-    }
 
     const newErrors = {}
     if (!form.company.trim()) newErrors.company = 'La société ou raison sociale est obligatoire.'
@@ -337,18 +321,6 @@ export default function DevisRequestModal() {
           /* Formulaire défilable */
           <form onSubmit={handleSubmit} noValidate className="flex-1 overflow-y-auto px-6 sm:px-8 py-6 space-y-6">
             
-            {/* Honeypot anti-spam */}
-            <div className="absolute -left-[9999px] -top-[9999px]" aria-hidden="true" tabIndex={-1}>
-              <input
-                type="text"
-                name="website"
-                value={form.website}
-                onChange={(e) => setForm((p) => ({ ...p, website: e.target.value }))}
-                tabIndex={-1}
-                autoComplete="off"
-              />
-            </div>
-
             {/* Message d'erreur de transmission */}
             {submitStatus && (
               <div

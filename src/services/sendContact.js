@@ -15,7 +15,9 @@ function sanitizeForTransport(str, maxLength = 1000) {
 }
 
 export async function sendContact(rawFormData) {
-  const endpoint = import.meta.env.VITE_CONTACT_ENDPOINT
+  const endpoint =
+    import.meta.env.VITE_CONTACT_ENDPOINT ||
+    'https://flstructures.alwaysdata.net/luciole-contact.php'
 
   // Sécurisation défensive des champs
   const cleanData = {

@@ -89,11 +89,9 @@ export default function ContactForm() {
     file: null,
     fileName: '',
     fileSizeFormatted: '',
-    website: '',
   })
 
   const [errors, setErrors] = useState({})
-  const [mountTime] = useState(() => Date.now())
 
   // Gestion du fichier joint
   const handleFileSelect = (selectedFile) => {
@@ -153,18 +151,6 @@ export default function ContactForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    // Protection anti-bot
-    if (Date.now() - mountTime < 1200) {
-      setIsSuccess(true)
-      return
-    }
-
-    // Protection Honeypot
-    if (form.website && form.website.trim() !== '') {
-      setIsSuccess(true)
-      return
-    }
 
     const newErrors = {}
     if (!form.company.trim()) newErrors.company = 'La société ou raison sociale est obligatoire.'
@@ -244,7 +230,6 @@ export default function ContactForm() {
       file: null,
       fileName: '',
       fileSizeFormatted: '',
-      website: '',
     })
     setErrors({})
     setSubmitStatus(null)
@@ -313,18 +298,6 @@ export default function ContactForm() {
           )}
 
           <form onSubmit={handleSubmit} noValidate className="space-y-6">
-            {/* Honeypot */}
-            <div className="absolute -left-[9999px] -top-[9999px]" aria-hidden="true" tabIndex={-1}>
-              <input
-                type="text"
-                name="website"
-                value={form.website}
-                onChange={(e) => setForm((p) => ({ ...p, website: e.target.value }))}
-                tabIndex={-1}
-                autoComplete="off"
-              />
-            </div>
-
             {/* SECTION 1 : ENTREPRISE & INTERLOCUTEUR */}
             <div className="space-y-4">
               <div
