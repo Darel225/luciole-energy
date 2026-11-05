@@ -121,7 +121,7 @@ export default function Hero() {
 
           {/* t=380ms : Titre Principal H1 forcé en blanc + filtre blur(8px) -> 0 + ombre douce */}
           <h1 className="hero-title-white mb-6 hero-h1-anim">
-            L'expertise au service<br />
+            L'expertise au service <br className="sm:hidden" />
             de vos{' '}
             <span className="hero-highlight-word">projets énergétiques</span>.
           </h1>
