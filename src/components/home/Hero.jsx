@@ -111,7 +111,7 @@ export default function Hero() {
 
       {/* Contenu textuel */}
       <div className="container-custom relative z-10 w-full py-12">
-        <div className="max-w-[620px] flex flex-col items-start text-left">
+        <div className="max-w-[620px] lg:max-w-[710px] flex flex-col items-start text-left">
           
           {/* t=250ms : Étiquette / Pastille discrète */}
           <div className="section-badge-dark mb-5 hero-badge-anim">
@@ -128,7 +128,7 @@ export default function Hero() {
 
           {/* t=650ms : Description en blanc à 88% d'opacité */}
           <p
-            className="hero-p-anim text-[1rem] sm:text-[1.0625rem] leading-[1.65] mb-8 font-normal"
+            className="hero-p-anim text-[1rem] sm:text-[1.0625rem] leading-[1.65] mb-8 font-normal max-w-[560px]"
             style={{ color: 'rgba(255, 255, 255, 0.88)' }}
           >
             De l'étude à la réalisation, Luciole Energy accompagne les entreprises et les industries avec des solutions énergétiques fiables, performantes et durables.
