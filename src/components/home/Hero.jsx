@@ -111,7 +111,7 @@ export default function Hero() {
 
       {/* Contenu textuel */}
       <div className="container-custom relative z-10 w-full py-12">
-        <div className="max-w-[620px] lg:max-w-[710px] flex flex-col items-start text-left">
+        <div className="max-w-[620px] sm:max-w-[740px] lg:max-w-[780px] flex flex-col items-start text-left">
           
           {/* t=250ms : Étiquette / Pastille discrète */}
           <div className="section-badge-dark mb-5 hero-badge-anim">
@@ -122,8 +122,10 @@ export default function Hero() {
           {/* t=380ms : Titre Principal H1 forcé en blanc + filtre blur(8px) -> 0 + ombre douce */}
           <h1 className="hero-title-white mb-6 hero-h1-anim">
             L'expertise au service<br />
-            de vos{' '}
-            <span className="hero-highlight-word">projets énergétiques</span>.
+            <span className="sm:whitespace-nowrap">
+              de vos{' '}
+              <span className="hero-highlight-word">projets énergétiques</span>.
+            </span>
           </h1>
 
           {/* t=650ms : Description en blanc à 88% d'opacité */}
