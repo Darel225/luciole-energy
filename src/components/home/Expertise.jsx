@@ -77,7 +77,7 @@ function ExpertiseCardItem({ card, heightClasses, globalIndex }) {
             <div className="w-9 h-9 shrink-0 rounded-[8px] bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
               {getExpertiseIcon(card.id)}
             </div>
-            <span className="text-[var(--fs-micro)] md:text-[0.66rem] lg:text-[0.6875rem] whitespace-nowrap uppercase tracking-wider md:tracking-wide font-semibold text-white/90 bg-black/40 backdrop-blur-sm px-2.5 md:px-2 lg:px-2.5 py-1.5 md:py-1 rounded-full border border-white/10 shrink-0">
+            <span className="text-[0.66rem] lg:text-[0.6875rem] whitespace-nowrap uppercase tracking-wide font-semibold text-white/90 bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10 shrink-0">
               {card.category}
             </span>
           </div>
