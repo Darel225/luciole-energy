@@ -4,7 +4,7 @@
 // =========================================================================
 // Modifiez simplement cette adresse e-mail le jour de la livraison pour que
 // le client reçoive directement toutes les demandes de devis et de contact.
-$emailDestinataireClient = "darelseke608@gmail.com"; // Remplacer par l'email du client (ex: info@luciole-energy.com)
+$emailDestinataireClient = "info@luciole-energy.com"; // Remplacer par l'email du client (ex: info@luciole-energy.com)
 
 // =========================================================================
 // TRAITEMENT DU FORMULAIRE DE CONTACT & DEVIS B2B - LUCIOLE ENERGY
