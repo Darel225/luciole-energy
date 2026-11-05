@@ -136,7 +136,8 @@ export default function RealisationsGrid() {
               isHeaderVisible ? 'is-visible' : ''
             } text-2xl sm:text-3xl lg:text-[2.25rem] font-bold text-[var(--texte-titre)] leading-tight mb-3`}
           >
-            L'Excellence Technique sur le Terrain
+            L'Excellence Technique <br className="sm:hidden" />
+            sur le Terrain
           </h2>
 
           {/* Trait d'accent vert signature */}
@@ -179,10 +180,10 @@ export default function RealisationsGrid() {
             onButtonClick={() => openDevisModal()}
             badges={
               <>
-                <span className="px-3.5 py-1.5 rounded-full bg-[#082B1B]/85 backdrop-blur-md text-[#3DDC84] border border-[#3DDC84]/30 text-[0.6875rem] font-bold uppercase tracking-wider shadow-sm">
+                <span className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-[#082B1B]/85 backdrop-blur-md text-[#3DDC84] border border-[#3DDC84]/30 text-[0.66rem] sm:text-[0.6875rem] font-bold uppercase tracking-wide sm:tracking-wider shadow-sm whitespace-nowrap">
                   Énergie Renouvelable
                 </span>
-                <span className="px-3.5 py-1.5 rounded-full bg-[#2EE07B] text-[#062414] text-[0.6875rem] font-black uppercase tracking-wider shadow-md">
+                <span className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-[#2EE07B] text-[#062414] text-[0.66rem] sm:text-[0.6875rem] font-black uppercase tracking-wide sm:tracking-wider shadow-md whitespace-nowrap">
                   Livré Clés en Main
                 </span>
               </>
@@ -205,7 +206,7 @@ export default function RealisationsGrid() {
               buttonText="Étudier un projet similaire"
               onButtonClick={() => openDevisModal()}
               badges={
-                <span className="px-3.5 py-1.5 rounded-full bg-[#082B1B]/85 backdrop-blur-md text-[#3DDC84] border border-[#3DDC84]/30 text-[0.6875rem] font-bold uppercase tracking-wider shadow-sm">
+                <span className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-[#082B1B]/85 backdrop-blur-md text-[#3DDC84] border border-[#3DDC84]/30 text-[0.66rem] sm:text-[0.6875rem] font-bold uppercase tracking-wide sm:tracking-wider shadow-sm whitespace-nowrap">
                   Éclairage Public
                 </span>
               }
@@ -225,7 +226,7 @@ export default function RealisationsGrid() {
               buttonText="Étudier un projet similaire"
               onButtonClick={() => openDevisModal()}
               badges={
-                <span className="px-3.5 py-1.5 rounded-full bg-[#082B1B]/85 backdrop-blur-md text-[#3DDC84] border border-[#3DDC84]/30 text-[0.6875rem] font-bold uppercase tracking-wider shadow-sm">
+                <span className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-[#082B1B]/85 backdrop-blur-md text-[#3DDC84] border border-[#3DDC84]/30 text-[0.66rem] sm:text-[0.6875rem] font-bold uppercase tracking-wide sm:tracking-wider shadow-sm whitespace-nowrap">
                   Ingénierie Électrique
                 </span>
               }
