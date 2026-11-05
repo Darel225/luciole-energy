@@ -70,14 +70,14 @@ function ExpertiseCardItem({ card, heightClasses, globalIndex }) {
           }}
         />
 
-        {/* Contenu superposé : fade-in 500ms avec 250ms de retard */}
-        <div className="card-content-fade relative z-10 w-full h-full p-5 sm:p-6 flex flex-col justify-between">
-                    {/* Ligne du haut : icône & numéro/catégorie */}
-          <div className="flex items-start md:items-center justify-between gap-3 md:gap-0">
-            <div className="w-9 h-9 shrink-0 md:shrink rounded-[8px] bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
+        {/* Contenu superpose : fade-in 500ms avec 250ms de retard */}
+        <div className="card-content-fade relative z-10 w-full h-full p-5 sm:px-4.5 lg:px-5 sm:py-6 flex flex-col justify-between">
+          {/* Ligne du haut : icone & numero/categorie */}
+          <div className="flex items-center justify-between gap-2.5 sm:gap-3">
+            <div className="w-9 h-9 shrink-0 rounded-[8px] bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
               {getExpertiseIcon(card.id)}
             </div>
-            <span className="text-[var(--fs-micro)] leading-[1.25] md:leading-normal text-right md:text-left uppercase tracking-wider font-semibold text-white/90 bg-black/40 backdrop-blur-sm px-2.5 py-1.5 md:py-1 rounded-lg md:rounded-full border border-white/10">
+            <span className="text-[var(--fs-micro)] md:text-[0.66rem] lg:text-[0.6875rem] whitespace-nowrap uppercase tracking-wider md:tracking-wide font-semibold text-white/90 bg-black/40 backdrop-blur-sm px-2.5 md:px-2 lg:px-2.5 py-1.5 md:py-1 rounded-full border border-white/10 shrink-0">
               {card.category}
             </span>
           </div>
